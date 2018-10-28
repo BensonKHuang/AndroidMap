@@ -22,28 +22,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendLocation(View view){
-        Intent intent = new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, ListOfPlaces.class);
         EditText input = (EditText)findViewById(R.id.locName);
 
         Geocoder geoDude = new Geocoder(this, Locale.getDefault());
-        double lat = 999;
-        double lng = 999;
 
         try {
-            List<Address> addrs = geoDude.getFromLocationName(input.getText().toString(), 1);
-            if(addrs.size() > 0){
-                lat = addrs.get(0).getLatitude();
-                lng = addrs.get(0).getLongitude();
+            List<Address> addrs = geoDude.getFromLocationName(input.getText().toString(), 5);
+
+            if(addrs.size() == 0){
+                Toast.makeText(getApplicationContext(), "Nothing found...", Toast.LENGTH_LONG).show();
+            } else {
+                ListOfPlaces.setAddrs(addrs);
+                startActivity(intent);
             }
         } catch(Exception e){
             Log.e("Bensan Error", e.toString());
-        }
-
-        if(lat != 999){
-            MapsActivity.setLatLng(lat, lng);
-            startActivity(intent);
-        } else {
-            Toast.makeText(getApplicationContext(), "Nothing found...", Toast.LENGTH_LONG).show();
         }
     }
 }
