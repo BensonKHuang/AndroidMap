@@ -20,7 +20,8 @@ import java.util.Locale;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private static String query;
+    private static double lat;
+    private static double lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +32,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
-    public static void setQuery(String query){
-        MapsActivity.query = query;
+    public static void setLatLng(double lat, double lng){
+        MapsActivity.lat = lat;
+        MapsActivity.lng = lng;
     }
-
 
     /**
      * Manipulates the map once available.
@@ -50,26 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        Geocoder geoDude = new Geocoder(this, Locale.getDefault());
-        double lat = 999;
-        double lng = 999;
-
-        try {
-            List<Address> addrs = geoDude.getFromLocationName(query, 1);
-            if(addrs.size() > 0){
-                lat = addrs.get(0).getLatitude();
-                lng = addrs.get(0).getLongitude();
-            }
-        } catch(Exception e){
-            Log.e("Bensan Error", e.toString());
-        };
-
-        if(lat != 999){
-            LatLng marker = new LatLng(lat, lng);
-            mMap.addMarker(new MarkerOptions().position(marker).title("Marker"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
-        } else {
-
-        }
+        LatLng marker = new LatLng(MapsActivity.lat, MapsActivity.lng);
+        mMap.addMarker(new MarkerOptions().position(marker).title("Marker"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
     }
 }
